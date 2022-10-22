@@ -72,8 +72,38 @@ const index = (req, res) => {
   res.json(req.user);
 }
 
+const update = (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.mapped() });
+  }
+
+  model.User.update({ 
+    username : req.body.username,
+    password: crypto.createHmac('sha256', secret).update(req.body.password).digest('hex')
+  }, {
+    where :{ id : req.user.id }
+  }).then(() => {
+    req.logout(() => {
+      res.status(201);
+      res.json({
+        "status" : "success",
+        "message" : "user updated"
+      });
+    });
+  }).catch((err) => {
+    res.status(422);
+    res.json({
+      "status" : "error",
+      "message" : err.message
+    });
+  });
+}
+
 module.exports = {
   register,
   login,
-  index
+  index,
+  update
 }
