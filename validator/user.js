@@ -10,6 +10,14 @@ const register = [
     .isLength({min: 6}).withMessage('password field minimum 6 character')
 ];
 
+const login = [
+    check('username')
+      .not().isEmpty().withMessage('username field is required'),
+    check('password')
+      .not().isEmpty().withMessage('password field is required')
+  ];
+
 module.exports = {
-  register
+  register,
+  login
 }
