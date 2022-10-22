@@ -101,9 +101,27 @@ const update = (req, res) => {
   });
 }
 
+const destroy = (req, res) => {
+  model.User.findByPk(req.user.id).then(data => {
+    data.destroy()
+    res.status(201);
+      res.json({
+        "status" : "success",
+        "message" : "user deleted"
+      });
+  }).catch((err) => {
+    res.status(422);
+    res.json({
+      "status" : "error",
+      "message" : err.message
+    });
+  });
+}
+
 module.exports = {
   register,
   login,
   index,
-  update
+  update,
+  destroy
 }
