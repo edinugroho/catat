@@ -88,12 +88,20 @@ const destroy = (req, res) => {
         "message" : "Transaction not found"
       });
     } else {
-      data.destroy()
-      res.status(201);
-      res.json({
-        "status" : "success",
-        "message" : "Transaction deleted"
-      });
+      if (data.id_user != req.user.id) {
+        res.status(401);
+        res.json({
+          "status" : "error",
+          "message" : "Unauthorized"
+        });
+      } else {
+        data.destroy()
+        res.status(201);
+        res.json({
+          "status" : "success",
+          "message" : "Transaction deleted"
+        });
+      }
     }
   }).catch((err) => {
     res.status(422);
