@@ -48,25 +48,33 @@ const update = (req, res) => {
         "message" : "Transaction not found"
       });
     } else {
-      result.set({
-        amount : req.body.amount,
-        notes : req.body.notes,
-        date : req.body.date,
-        type : req.body.type,
-      })
-      result.save().then(() => {
-        res.status(201);
-        res.json({
-          "status" : "success",
-          "message" : "Transaction updated"
-        });
-      }).catch((err) => {
-        res.status(422);
+      if (result.id_user != req.user.id) {
+        res.status(401);
         res.json({
           "status" : "error",
-          "message" : err.message
+          "message" : "Unauthorized"
         });
-      });
+      } else {
+        result.set({
+          amount : req.body.amount,
+          notes : req.body.notes,
+          date : req.body.date,
+          type : req.body.type,
+        })
+        result.save().then(() => {
+          res.status(201);
+          res.json({
+            "status" : "success",
+            "message" : "Transaction updated"
+          });
+        }).catch((err) => {
+          res.status(422);
+          res.json({
+            "status" : "error",
+            "message" : err.message
+          });
+        });
+      }
     } 
   });
 }
