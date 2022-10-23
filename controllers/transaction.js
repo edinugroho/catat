@@ -175,9 +175,42 @@ const index = (req, res) => {
   });
 }
 
+const show = (req, res) => {
+  model.Transaction.findByPk(req.params.id).then(data => {
+    if (!data) {
+      res.status(404);
+      res.json({
+        "status" : "error",
+        "message" : "Transaction not found"
+      });
+    } else {
+      if (data.id_user != req.user.id) {
+        res.status(401);
+        res.json({
+          "status" : "error",
+          "message" : "Unauthorized"
+        });
+      } else {
+        res.status(201);
+        res.json({
+          "status" : "success",
+          data
+        });
+      }
+    }
+  }).catch((err) => {
+    res.status(422);
+    res.json({
+      "status" : "error",
+      "message" : err.message
+    });
+  });
+}
+
 module.exports = {
   store,
   update,
   destroy,
-  index
+  index,
+  show
 }
