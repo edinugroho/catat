@@ -121,6 +121,8 @@ const index = (req, res) => {
     }
   }
   
+  where.id_user = req.user.id
+  
   const getPagingData = (data, page, limit) => {
     const { count: totalItems, rows: transactions } = data;
     const currentPage = page ? +page : 0;
