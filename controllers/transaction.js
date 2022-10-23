@@ -146,8 +146,8 @@ const index = (req, res) => {
     const links = {
       first : `http://${req.get('host')}/transaction?page=0&size=${limit}&page=0&type=${req.query.type ?? ''}&start=${req.query.start ?? ''}&end=${req.query.end ?? ''}`,
       prev : `http://${req.get('host')}/transaction?page=${currentPage >= 0 ? 0 : currentPage - 1}&size=${limit}&page=0&type=${req.query.type ?? ''}&start=${req.query.start ?? ''}&end=${req.query.end ?? ''}`,
-      next : `http://${req.get('host')}/transaction?page=${currentPage >= totalPages - 1 ? totalPages - 1 : currentPage + 1}&size=${limit}&page=0&type=${req.query.type ?? ''}&start=${req.query.start ?? ''}&end=${req.query.end ?? ''}`,
-      last : `http://${req.get('host')}/transaction?page=${totalPages - 1}&size=${limit}&page=0&type=${req.query.type ?? ''}&start=${req.query.start ?? ''}&end=${req.query.end ?? ''}`,
+      next : `http://${req.get('host')}/transaction?page=${totalItems == 0 ? 0 : currentPage >= totalPages - 1 ? totalPages - 1 : currentPage + 1}&size=${limit}&page=0&type=${req.query.type ?? ''}&start=${req.query.start ?? ''}&end=${req.query.end ?? ''}`,
+      last : `http://${req.get('host')}/transaction?page=${totalItems == 0 ? 0 : totalPages - 1}&size=${limit}&page=0&type=${req.query.type ?? ''}&start=${req.query.start ?? ''}&end=${req.query.end ?? ''}`,
     }
   
     return { totalItems, transactions, totalPages, currentPage, links};
