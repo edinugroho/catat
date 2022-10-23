@@ -69,7 +69,33 @@ const update = (req, res) => {
   });
 }
 
+const destroy = (req, res) => {
+  model.Transaction.findByPk(req.params.id).then(data => {
+    if (!data) {
+      res.status(404);
+      res.json({
+        "status" : "error",
+        "message" : "Transaction not found"
+      });
+    } else {
+      data.destroy()
+      res.status(201);
+      res.json({
+        "status" : "success",
+        "message" : "Transaction deleted"
+      });
+    }
+  }).catch((err) => {
+    res.status(422);
+    res.json({
+      "status" : "error",
+      "message" : err.message
+    });
+  });
+}
+
 module.exports = {
   store,
-  update
+  update,
+  destroy
 }
