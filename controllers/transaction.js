@@ -125,13 +125,13 @@ const index = (req, res) => {
   const { page, size } = req.query;
   const { limit, offset } =  getPagination(page, size);
 
-  if (req.query.type !== undefined) {
+  if (req.query.type) {
     where.type = {
       [Op.like]: `%${req.query.type ?? ''}%`
     }
   }
 
-  if (req.query.start !== undefined && req.query.end !== undefined) {
+  if (req.query.start && req.query.end) {
     where.date = {
       [Op.between]: [moment(req.query.start).format('YYYY-MM-DD'), moment(req.query.end).format('YYYY-MM-DD')] 
     }
