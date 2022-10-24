@@ -114,6 +114,7 @@ const destroy = (req, res) => {
 
 const index = (req, res) => {
   var where = {};
+  var order = [];
 
   const getPagination = (page, size) => {
     const limit = size ? +size : 3;
@@ -122,7 +123,7 @@ const index = (req, res) => {
     return { limit, offset };
   };
 
-  const { page, size } = req.query;
+  const { page, size, order_by, sort_by} = req.query;
   const { limit, offset } =  getPagination(page, size);
 
   if (req.query.type) {
@@ -135,6 +136,12 @@ const index = (req, res) => {
     where.date = {
       [Op.between]: [moment(req.query.start).format('YYYY-MM-DD'), moment(req.query.end).format('YYYY-MM-DD')] 
     }
+  }
+
+  if (order_by && sort_by) {
+    order = [
+      [sort_by, order_by]
+    ]
   }
   
   where.id_user = req.user.id
@@ -157,8 +164,9 @@ const index = (req, res) => {
     limit: limit,
     offset: offset,
   where: {
-    [Op.and]: [where] 
-  }
+    [Op.and]: [where]
+  },
+  order
   }).then(data => {
     res.status(201);
     const response = getPagingData(data, page, limit);
